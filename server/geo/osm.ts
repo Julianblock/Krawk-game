@@ -3,6 +3,7 @@ import { fetchWithTimeout } from "./http.ts";
 import type { LocalProjection } from "./projection.ts";
 
 const OVERPASS_ENDPOINTS = [
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter",
   "https://overpass-api.de/api/interpreter",
   "https://overpass.private.coffee/api/interpreter",
