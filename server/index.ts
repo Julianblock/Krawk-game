@@ -9,9 +9,11 @@ import { setPngDecoder } from "./geo/elevation.ts";
 import { geocodeZip } from "./geo/zip.ts";
 import { buildWorld } from "./world.ts";
 
+const ROOT = resolve(import.meta.dirname, "..");
+if (existsSync(join(ROOT, ".env"))) process.loadEnvFile(join(ROOT, ".env"));
+
 setPngDecoder(async (buf) => PNG.sync.read(Buffer.from(buf)));
 
-const ROOT = resolve(import.meta.dirname, "..");
 const PORT = Number(process.env.PORT ?? process.env.KRAWK_API_PORT ?? 8787);
 const SHARDS = Number(process.env.KRAWK_SHARDS ?? 4);
 const isProd = process.env.NODE_ENV === "production";
