@@ -8,7 +8,14 @@ export interface DeployRequest {
   size: WorldSize;
   callsign: string;
   tutorial: boolean;
+  lighting: Lighting;
 }
+
+export type Lighting = "live" | "noon" | "golden" | "night";
+
+export const LIGHTING_HOURS: Record<Exclude<Lighting, "live">, number> = { noon: 13, golden: 17.4, night: 22.5 };
+
+const LIGHTINGS: [Lighting, string][] = [["live", "LIVE"], ["noon", "NOON"], ["golden", "GOLDEN"], ["night", "NIGHT"]];
 
 const QUICK = [
   ["90210", "Beverly Hills"],
@@ -29,6 +36,7 @@ export class Menu {
   readonly el: HTMLElement;
   private bg: ContourFlyover;
   private size: WorldSize = 1000;
+  private lighting: Lighting = "live";
   private validZip: string | null = null;
   private lookupSeq = 0;
 
@@ -37,6 +45,9 @@ export class Menu {
     this.el.className = "menu";
     const savedSize = Number(localStorage.getItem("krawk.size"));
     if ((WORLD_SIZES as readonly number[]).includes(savedSize)) this.size = savedSize as WorldSize;
+    const params = new URLSearchParams(location.search);
+    const savedLight = (params.get("tod") ?? localStorage.getItem("krawk.lighting")) as Lighting | null;
+    if (savedLight && LIGHTINGS.some(([k]) => k === savedLight)) this.lighting = savedLight;
     const bootcampDone = localStorage.getItem("krawk.bootcamp") === "1";
 
     this.el.innerHTML = `
@@ -60,6 +71,8 @@ export class Menu {
             <div class="quick-zips">${QUICK.map(([z, n]) => `<button type="button" class="chip" data-zip="${z}"><b>${z}</b>${n}</button>`).join("")}</div>
             <label class="field-label">BATTLEFIELD SIZE</label>
             <div class="seg">${WORLD_SIZES.map((s) => `<button type="button" class="seg-btn${s === this.size ? " on" : ""}" data-size="${s}"><b>${SIZES[s][0]}</b><small>${SIZES[s][1]}</small></button>`).join("")}</div>
+            <label class="field-label">LIGHTING <em class="field-hint">LIVE = real local sun position right now</em></label>
+            <div class="seg seg-4">${LIGHTINGS.map(([k, n]) => `<button type="button" class="seg-btn light-btn${k === this.lighting ? " on" : ""}" data-light="${k}"><b>${n}</b></button>`).join("")}</div>
             <label class="field-label">CALLSIGN</label>
             <input class="callsign" maxlength="24" placeholder="MAGGOT" value="${(localStorage.getItem("krawk.callsign") ?? "").replace(/"/g, "")}" />
             <div class="menu-actions">
@@ -140,13 +153,22 @@ export class Menu {
         setZip(b.dataset.zip!);
       }),
     );
-    this.el.querySelectorAll<HTMLButtonElement>(".seg-btn").forEach((b) =>
+    this.el.querySelectorAll<HTMLButtonElement>(".light-btn").forEach((b) =>
+      b.addEventListener("click", () => {
+        this.audio.unlock();
+        this.audio.uiTick();
+        this.lighting = b.dataset.light as Lighting;
+        localStorage.setItem("krawk.lighting", this.lighting);
+        this.el.querySelectorAll(".light-btn").forEach((x) => x.classList.toggle("on", x === b));
+      }),
+    );
+    this.el.querySelectorAll<HTMLButtonElement>(".seg-btn[data-size]").forEach((b) =>
       b.addEventListener("click", () => {
         this.audio.unlock();
         this.audio.uiTick();
         this.size = Number(b.dataset.size) as WorldSize;
         localStorage.setItem("krawk.size", String(this.size));
-        this.el.querySelectorAll(".seg-btn").forEach((x) => x.classList.toggle("on", x === b));
+        this.el.querySelectorAll(".seg-btn[data-size]").forEach((x) => x.classList.toggle("on", x === b));
       }),
     );
 
@@ -165,7 +187,7 @@ export class Menu {
       localStorage.setItem("krawk.callsign", name);
       this.audio.uiDeploy();
       this.bg.boost = 1;
-      onDeploy({ zip: this.validZip, size: this.size, callsign: name, tutorial });
+      onDeploy({ zip: this.validZip, size: this.size, callsign: name, tutorial, lighting: this.lighting });
     };
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -174,7 +196,7 @@ export class Menu {
     this.el.querySelector(".btn-bootcamp")!.addEventListener("click", () => go(true));
     this.el.addEventListener("pointerdown", () => this.audio.unlock(), { once: true });
 
-    const preset = new URLSearchParams(location.search).get("zip");
+    const preset = params.get("zip");
     if (preset && /^\d{5}$/.test(preset)) setZip(preset);
     else setTimeout(() => cells[0].focus(), 600);
 

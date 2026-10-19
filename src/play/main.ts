@@ -11,7 +11,7 @@ import { Renderer } from "./engine/renderer.ts";
 import { Game } from "./game/game.ts";
 import { playerId, submitScore, upsertPlayer } from "./net/api.ts";
 import { Briefing, Loading } from "./ui/loading.ts";
-import { Menu, type DeployRequest } from "./ui/menu.ts";
+import { LIGHTING_HOURS, Menu, type DeployRequest } from "./ui/menu.ts";
 import { EndOverlay, PauseOverlay } from "./ui/overlays.ts";
 
 const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
@@ -78,7 +78,8 @@ function launch(world: WorldData, req: DeployRequest) {
   game?.dispose();
   gl ??= Renderer.createWebGL(canvas);
   canvas.style.visibility = "visible";
-  const g = new Game(world, gl, input, audio, ui, req.tutorial);
+  const lit = req.lighting === "live" ? world : { ...world, director: { ...world.director, timeOfDay: LIGHTING_HOURS[req.lighting] } };
+  const g = new Game(lit, gl, input, audio, ui, req.tutorial);
   game = g;
   g.hud.show(false);
   g.onEnd = (victory, stats) => {

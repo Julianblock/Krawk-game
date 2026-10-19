@@ -187,6 +187,10 @@
 .seg-btn:hover { border-color: var(--line-2); }
 .seg-btn.on { border-color: var(--brass); background: linear-gradient(180deg, rgba(255, 178, 46, 0.16), rgba(255, 178, 46, 0.03)); box-shadow: 0 0 30px -10px var(--brass); }
 .seg-btn.on small { color: var(--brass); }
+.seg-4 { grid-template-columns: repeat(4, 1fr); }
+.seg-4 .seg-btn { padding: 8px 10px; }
+.seg-4 .seg-btn b { font-size: 15px; }
+.field-hint { font-style: normal; color: var(--mute); opacity: 0.7; margin-left: 8px; letter-spacing: 0.12em; font-size: 0.9em; }
 
 .callsign {
   height: 52px;
