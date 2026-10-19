@@ -11,7 +11,8 @@ export async function fetchWithTimeout(
     return await fetch(url, {
       ...rest,
       signal: ctrl.signal,
-      headers: { "User-Agent": USER_AGENT, ...(rest.headers ?? {}) },
+      // browsers forbid overriding User-Agent and some reject the request outright
+      headers: { ...(typeof window === "undefined" ? { "User-Agent": USER_AGENT } : {}), ...(rest.headers ?? {}) },
     });
   } finally {
     clearTimeout(timer);

@@ -28,12 +28,13 @@ interface AiDirectorJson {
 
 export async function direct(input: DirectorInput, onLog: (m: string) => void): Promise<Director> {
   const fallback = heuristicDirector(input);
-  const key = process.env.OPENAI_API_KEY;
+  const env = typeof process === "undefined" ? {} : process.env;
+  const key = env.OPENAI_API_KEY;
   if (!key) {
     onLog("No OPENAI_API_KEY set: the built-in rules director is composing the battlefield");
     return fallback;
   }
-  const model = process.env.OPENAI_MODEL ?? "gpt-5-mini";
+  const model = env.OPENAI_MODEL ?? "gpt-5-mini";
   try {
     onLog(`Briefing ${model} with the real-world survey data...`);
     const userPayload = {

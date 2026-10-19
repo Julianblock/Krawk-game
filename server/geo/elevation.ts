@@ -1,4 +1,3 @@
-import { PNG } from "pngjs";
 import type { TerrainGrid } from "../../shared/types.ts";
 import { fetchJson, fetchWithTimeout } from "./http.ts";
 import type { LocalProjection } from "./projection.ts";
@@ -20,10 +19,25 @@ function lonLatToTile(lon: number, lat: number, z: number) {
   };
 }
 
+export type PngDecoder = (buf: ArrayBuffer) => Promise<{ width: number; height: number; data: ArrayLike<number> }>;
+
+let decodePng: PngDecoder = async (buf) => {
+  const bmp = await createImageBitmap(new Blob([buf], { type: "image/png" }), { colorSpaceConversion: "none", premultiplyAlpha: "none" });
+  const canvas = new OffscreenCanvas(bmp.width, bmp.height);
+  const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+  ctx.drawImage(bmp, 0, 0);
+  return { width: bmp.width, height: bmp.height, data: ctx.getImageData(0, 0, bmp.width, bmp.height).data };
+};
+
+/** Node has no canvas; the server swaps in a pure-JS decoder at startup. */
+export function setPngDecoder(d: PngDecoder) {
+  decodePng = d;
+}
+
 async function loadTile(z: number, x: number, y: number): Promise<Float32Array> {
   const res = await fetchWithTimeout(TILE_URL(z, x, y), { timeoutMs: 15000 });
   if (!res.ok) throw new Error(`terrarium tile ${z}/${x}/${y}: ${res.status}`);
-  const png = PNG.sync.read(Buffer.from(await res.arrayBuffer()));
+  const png = await decodePng(await res.arrayBuffer());
   const out = new Float32Array(png.width * png.height);
   for (let i = 0; i < out.length; i++) {
     const o = i * 4;

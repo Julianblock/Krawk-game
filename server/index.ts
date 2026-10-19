@@ -1,11 +1,15 @@
 import express from "express";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { PNG } from "pngjs";
 import { WORLD_DATA_VERSION, WORLD_SIZES, type ScoreSubmission, type WorldProgress, type WorldSize } from "../shared/types.ts";
 import { ShardCluster } from "./db/cluster.ts";
 import { Repo } from "./db/repo.ts";
+import { setPngDecoder } from "./geo/elevation.ts";
 import { geocodeZip } from "./geo/zip.ts";
 import { buildWorld } from "./world.ts";
+
+setPngDecoder(async (buf) => PNG.sync.read(Buffer.from(buf)));
 
 const ROOT = resolve(import.meta.dirname, "..");
 const PORT = Number(process.env.PORT ?? process.env.KRAWK_API_PORT ?? 8787);
