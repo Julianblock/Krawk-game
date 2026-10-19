@@ -150,6 +150,11 @@ export class Game {
 
     if (withTutorial) {
       this.tutorial = new Tutorial(this.scene, this.player, this.weapons, this.goblins, this.hud, audio, this.collision, `${world.place.name}`);
+      this.tutorial.sightBlocked = (from, to) => {
+        const d = to.clone().sub(from);
+        const len = d.length();
+        return !!this.city.cars.raycast(from, d.normalize(), len);
+      };
       this.tutorial.onComplete = (shame) => {
         this.stats.tutorialShame = shame;
         localStorage.setItem("krawk.bootcamp", "1");

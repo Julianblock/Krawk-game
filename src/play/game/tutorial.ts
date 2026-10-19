@@ -40,6 +40,7 @@ export class Tutorial {
   private sprintStartDist = 0;
   done = false;
   onComplete?: (shame: number) => void;
+  sightBlocked?: (from: THREE.Vector3, to: THREE.Vector3) => boolean;
 
   constructor(
     private readonly scene: THREE.Scene,
@@ -188,7 +189,9 @@ export class Tutorial {
         const x = this.player.pos.x - Math.sin(yaw) * d;
         const z = this.player.pos.z - Math.cos(yaw) * d;
         if (this.collision.buildingAt(x, z)) continue;
-        if (this.collision.lineBlocked(this.player.pos.x, eyeY, this.player.pos.z, x, this.collision.groundAt(x, z) + 1.2, z)) continue;
+        const ty = this.collision.groundAt(x, z) + 1.2;
+        if (this.collision.lineBlocked(this.player.pos.x, eyeY, this.player.pos.z, x, ty, z)) continue;
+        if (this.sightBlocked?.(new THREE.Vector3(this.player.pos.x, eyeY, this.player.pos.z), new THREE.Vector3(x, ty, z))) continue;
         return [x, z];
       }
     }
