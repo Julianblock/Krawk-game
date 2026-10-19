@@ -18,6 +18,7 @@ export class ContourFlyover {
   };
   private readonly onResize = () => this.resize();
   boost = 0;
+  paused = false;
 
   constructor(private readonly canvas: HTMLCanvasElement, accent = "#b6ff1f") {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -108,6 +109,7 @@ export class ContourFlyover {
   private frame = () => {
     if (!this.alive) return;
     this.raf = requestAnimationFrame(this.frame);
+    if (this.paused) return;
     const t = (performance.now() - this.t0) / 1000;
     this.mat.uniforms.uTime.value = t * (1 + this.boost * 6);
     this.camera.position.set(this.mx * 6, 34 - this.my * 4, 30);

@@ -1,22 +1,4 @@
-:root {
-  --ink: #04060a;
-  --ink-2: #0a0e14;
-  --line: rgba(255, 255, 255, 0.09);
-  --line-2: rgba(255, 255, 255, 0.18);
-  --text: #eef3f7;
-  --mute: #8b97a6;
-  --acid: #b6ff1f;
-  --acid-2: #3dffa0;
-  --brass: #ffb22e;
-  --blood: #ff2d55;
-  --cyan: #29e4ff;
-  --glass: rgba(12, 16, 22, 0.58);
-  --display: "Anton", "Impact", sans-serif;
-  --ui: "Rajdhani", "Segoe UI", system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, monospace;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-snap: cubic-bezier(0.7, 0, 0.2, 1);
-}
+@import "../../styles/tokens.css";
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
