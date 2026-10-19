@@ -113,7 +113,8 @@ export function buildCity(world: WorldData, terrain: Terrain, collision: (c: Bui
     const r = rng(idx * 7919 + pts.length);
     const hs = pts.map(([x, z]) => terrain.heightAt(x, z));
     const base = Math.min(...hs) - 0.8;
-    const top = Math.max(...hs) + b.height;
+    const ground = hs.reduce((a, h) => a + h, 0) / hs.length;
+    const top = Math.max(ground + b.height, Math.max(...hs) + 2.4);
     const area = polyArea(pts);
     const house = HOUSE_KINDS.has(b.kind) && area < 450 && pts.length <= 10 && b.height < 12;
 

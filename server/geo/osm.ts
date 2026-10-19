@@ -78,7 +78,7 @@ function buildingHeight(tags: Record<string, string>, id: number): number {
   const r = hashId(id);
   switch (tags.building) {
     case "house": case "detached": case "semidetached_house": case "bungalow":
-      return 5.5 + r * 3.5;
+      return 4.6 + r * 2.8;
     case "garage": case "garages": case "shed": case "carport": case "roof":
       return 2.8 + r;
     case "apartments": case "residential":
@@ -90,7 +90,7 @@ function buildingHeight(tags: Record<string, string>, id: number): number {
     case "church": case "cathedral":
       return 14 + r * 10;
     default:
-      return 5 + r * 5;
+      return 4.2 + r * 4;
   }
 }
 
