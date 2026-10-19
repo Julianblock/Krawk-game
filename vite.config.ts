@@ -1,0 +1,22 @@
+import { defineConfig } from "vite";
+import { resolve } from "node:path";
+
+const API_PORT = Number(process.env.KRAWK_API_PORT ?? 8787);
+
+export default defineConfig({
+  server: {
+    port: 5173,
+    proxy: {
+      "/api": { target: `http://localhost:${API_PORT}`, changeOrigin: true },
+    },
+  },
+  build: {
+    target: "es2022",
+    rollupOptions: {
+      input: {
+        landing: resolve(import.meta.dirname, "index.html"),
+        play: resolve(import.meta.dirname, "play.html"),
+      },
+    },
+  },
+});
