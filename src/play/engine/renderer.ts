@@ -55,22 +55,28 @@ export class Renderer {
   readonly bloom: UnrealBloomPass;
   readonly grade: ShaderPass;
 
+  private readonly onResize = () => this.resize();
+
+  static createWebGL(canvas: HTMLCanvasElement) {
+    const r = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance", preserveDrawingBuffer: true });
+    r.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    r.setSize(window.innerWidth, window.innerHeight, false);
+    r.shadowMap.enabled = true;
+    r.shadowMap.type = THREE.PCFSoftShadowMap;
+    r.toneMapping = THREE.ACESFilmicToneMapping;
+    r.toneMappingExposure = 1.0;
+    r.outputColorSpace = THREE.SRGBColorSpace;
+    return r;
+  }
+
   constructor(
-    canvas: HTMLCanvasElement,
+    renderer: THREE.WebGLRenderer,
     readonly scene: THREE.Scene,
     readonly camera: THREE.PerspectiveCamera,
     readonly viewScene: THREE.Scene,
     readonly viewCamera: THREE.PerspectiveCamera,
   ) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance", preserveDrawingBuffer: true });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-    this.renderer.setSize(window.innerWidth, window.innerHeight, false);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.0;
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-
+    this.renderer = renderer;
     const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
     const target = new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType, samples: 4 });
     this.composer = new EffectComposer(this.renderer, target);
@@ -86,7 +92,13 @@ export class Renderer {
     this.composer.addPass(this.grade);
     this.composer.addPass(new OutputPass());
 
-    window.addEventListener("resize", () => this.resize());
+    window.addEventListener("resize", this.onResize);
+    this.resize();
+  }
+
+  dispose() {
+    window.removeEventListener("resize", this.onResize);
+    this.composer.dispose();
   }
 
   get u() {
