@@ -273,11 +273,11 @@ function polyArea(poly: Vec2[]) {
 }
 
 const ROAD_STYLE: Record<Road["kind"], { color: string; lift: number }> = {
-  motorway: { color: "#2a2b2e", lift: 0.14 },
-  primary: { color: "#303134", lift: 0.13 },
-  secondary: { color: "#37383a", lift: 0.12 },
-  residential: { color: "#3e3f40", lift: 0.11 },
-  service: { color: "#4a4a47", lift: 0.1 },
+  motorway: { color: "#45474b", lift: 0.14 },
+  primary: { color: "#4b4d51", lift: 0.13 },
+  secondary: { color: "#525457", lift: 0.12 },
+  residential: { color: "#58595b", lift: 0.11 },
+  service: { color: "#626260", lift: 0.1 },
   path: { color: "#9a8a6c", lift: 0.09 },
 };
 
