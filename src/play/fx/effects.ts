@@ -21,7 +21,7 @@ export class Effects {
   private shellGeo = new THREE.CylinderGeometry(0.006, 0.006, 0.023, 8);
   private shellMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, metalness: 0.95, roughness: 0.25 });
   private bulletHole: THREE.MeshBasicMaterial;
-  private gooSplat: THREE.MeshBasicMaterial;
+  private gooMat: THREE.MeshBasicMaterial;
   private scorch: THREE.MeshBasicMaterial;
   onShellLand?: () => void;
 
@@ -36,7 +36,7 @@ export class Effects {
       g.fillStyle = grad;
       g.fillRect(0, 0, s, s);
     });
-    this.gooSplat = this.decalMat((g, s) => {
+    this.gooMat = this.decalMat((g, s) => {
       g.fillStyle = "rgba(70,160,20,0.9)";
       for (let i = 0; i < 14; i++) {
         const r = Math.random() * s * 0.18 + 4;
@@ -126,7 +126,7 @@ export class Effects {
 
   gooSplat(x: number, z: number, size: number) {
     const y = this.groundAt(x, z);
-    this.decal(new THREE.Vector3(x, y + 0.03, z), new THREE.Vector3(0, 1, 0), size, this.gooSplat);
+    this.decal(new THREE.Vector3(x, y + 0.03, z), new THREE.Vector3(0, 1, 0), size, this.gooMat);
   }
 
   explosion(pos: THREE.Vector3, scale = 1) {
