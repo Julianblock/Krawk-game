@@ -63,9 +63,11 @@ export class EndOverlay {
     const mins = Math.floor(stats.durationSec / 60), secs = Math.round(stats.durationSec % 60);
     const roast = victory
       ? "Sgt. Grimsby grudgingly admits you didn't completely embarrass the corps."
-      : stats.kills < 5
-        ? "Five kills? The goblins are writing a Yelp review about how easy you were."
-        : "You died with your boots on. Ugly boots. But on.";
+      : stats.kills === 0
+        ? "Zero kills. The goblins are leaving you a five-star Yelp review: \"Delicious. Didn't fight back.\""
+        : stats.kills < 5
+          ? `${stats.kills} kill${stats.kills === 1 ? "" : "s"}? The goblins are writing a Yelp review about how easy you were.`
+          : "You died with your boots on. Ugly boots. But on.";
     this.el = document.createElement("div");
     this.el.className = `overlay ${victory ? "end-win" : "end-dead"}`;
     this.el.innerHTML = `
@@ -85,12 +87,12 @@ export class EndOverlay {
         <ol class="end-board"></ol>
         <div class="actions">
           <button class="btn-deploy retry"><span>RUN IT BACK</span><i class="shine"></i></button>
-          <button class="btn-ghost menu">NEW ZIP CODE</button>
+          <button class="btn-ghost to-menu">NEW ZIP CODE</button>
         </div>
       </div>`;
     parent.appendChild(this.el);
     this.el.querySelector(".retry")!.addEventListener("click", onRetry);
-    this.el.querySelector(".menu")!.addEventListener("click", onMenu);
+    this.el.querySelector(".to-menu")!.addEventListener("click", onMenu);
 
     void submit.then((res) => {
       const rank = this.el.querySelector(".end-rank")!;

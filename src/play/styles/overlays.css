@@ -6,6 +6,8 @@
   background: radial-gradient(circle at 50% 45%, rgba(4, 6, 10, 0.6), rgba(4, 6, 10, 0.95));
   backdrop-filter: blur(6px) saturate(70%);
   z-index: 10;
+  overflow-y: auto;
+  padding: 24px 0;
   animation: fade-in 0.4s var(--ease-out) both;
 }
 .overlay-card { width: min(560px, 92vw); padding: 34px; text-align: center; }
@@ -61,4 +63,14 @@
   color: var(--acid);
   z-index: 6;
   animation: pulse 1.4s infinite;
+}
+
+@media (max-height: 760px) {
+  .overlay-card { padding: 24px 28px; }
+  .overlay h2 { font-size: 54px; }
+  .end-stats { margin: 14px 0; }
+  .end-stats div { padding: 10px 6px; }
+  .end-stats b { font-size: 28px; }
+  .end-board { max-height: 120px; }
+  .overlay .actions { margin-top: 16px; }
 }
