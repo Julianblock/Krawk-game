@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 const API_PORT = Number(process.env.KRAWK_API_PORT ?? 8787);
 
 export default defineConfig({
+  base: "./",
   server: {
     port: 5173,
     proxy: {
