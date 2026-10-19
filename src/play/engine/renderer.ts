@@ -14,7 +14,7 @@ const GradeShader = {
     uDamage: { value: 0 },
     uDesat: { value: 0 },
     uFlash: { value: 0 },
-    uGrain: { value: 0.045 },
+    uGrain: { value: 0.028 },
     uFlashColor: { value: new THREE.Color(1, 0.85, 0.6) },
   },
   vertexShader: /* glsl */ `
