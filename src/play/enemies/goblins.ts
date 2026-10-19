@@ -3,6 +3,7 @@ import type { AudioEngine } from "../audio/audio.ts";
 import type { Effects } from "../fx/effects.ts";
 import type { Player } from "../player/player.ts";
 import type { CollisionWorld } from "../world/collision.ts";
+import { FlowField } from "./flowField.ts";
 import { buildGoblin, type GoblinKind, type GoblinRig } from "./goblinModel.ts";
 
 export interface GoblinDef {
@@ -55,6 +56,8 @@ export interface Goblin {
   summonT: number;
   dummy: boolean;
   tauntT: number;
+  losT: number;
+  losClear: boolean;
 }
 
 export interface Projectile {
@@ -84,11 +87,15 @@ export class GoblinManager {
   onTaunt?: (g: Goblin) => void;
   onSummon?: (x: number, z: number) => void;
 
+  private readonly flow: FlowField;
+
   constructor(
     private readonly collision: CollisionWorld,
     private readonly fx: Effects,
     private readonly audio: AudioEngine,
-  ) {}
+  ) {
+    this.flow = new FlowField(collision, collision.terrain.size);
+  }
 
   get alive() {
     return this.goblins.filter((g) => g.state !== "dead" && !g.dummy);
@@ -107,6 +114,7 @@ export class GoblinManager {
       attackCd: 1 + Math.random(), stuckT: 0, lastPos: new THREE.Vector3(x, y, z), sidestep: 0, sidestepT: 0,
       deadVel: new THREE.Vector3(), deadSpin: new THREE.Vector3(), deadT: 0, headless: false, headGib: null,
       headGibVel: new THREE.Vector3(), alerted: false, summonT: 8, dummy: !!opts.dummy, tauntT: 4 + Math.random() * 10,
+      losT: Math.random() * 0.3, losClear: true,
     };
     rig.root.position.copy(g.pos);
     if (!opts.instant) {
@@ -209,6 +217,7 @@ export class GoblinManager {
     this.listener.copy(player.pos);
     this.listenerYaw = player.yaw;
     const target = player.pos;
+    this.flow.update(dt, target.x, target.z);
 
     for (let i = this.goblins.length - 1; i >= 0; i--) {
       const g = this.goblins[i];
@@ -297,7 +306,20 @@ export class GoblinManager {
       }
 
       if (moveSpeed !== 0 && dist > 0.01) {
+        g.losT -= dt;
+        if (g.losT <= 0) {
+          g.losT = 0.3;
+          g.losClear = !this.collision.lineBlocked(g.pos.x, g.pos.y + 0.8 * s, g.pos.z, target.x, target.y + 0.8, target.z);
+        }
         let mx = (dx / dist) * Math.sign(moveSpeed), mz = (dz / dist) * Math.sign(moveSpeed);
+        if (moveSpeed > 0 && !g.losClear) {
+          const f = this.flow.direction(g.pos.x, g.pos.z);
+          if (f) {
+            mx = f[0];
+            mz = f[1];
+            g.yaw = lerpAngle(g.yaw, Math.atan2(-mx, -mz), 1 - Math.exp(-dt * 6));
+          }
+        }
         for (const o of this.goblins) {
           if (o === g || o.state === "dead") continue;
           const ox = g.pos.x - o.pos.x, oz = g.pos.z - o.pos.z;
