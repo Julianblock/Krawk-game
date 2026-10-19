@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KRAWK — Your zip code. Their graveyard.</title>
+    <meta name="description" content="Type any US zip code. KRAWK pulls real elevation, streets and buildings, an AI director builds the battle, and goblins pour in. You get a .45 double-stack 1911 and a .44 Magnum Anaconda." />
+    <meta property="og:title" content="KRAWK — Your zip code. Their graveyard." />
+    <meta property="og:description" content="A browser FPS fought on the real-world terrain of any US zip code." />
+    <meta property="og:image" content="/shots/telluride-goblin.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#04060a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="landing">
+    <div class="progress-bar"></div>
+
+    <nav class="nav">
+      <a class="nav-brand" href="/"><img src="/favicon.svg" alt="" />KRAWK</a>
+      <div class="nav-links">
+        <a href="#world">The World</a>
+        <a href="#arsenal">Arsenal</a>
+        <a href="#bestiary">Bestiary</a>
+        <a href="#bootcamp">Boot Camp</a>
+        <a href="#killboard">Killboard</a>
+      </div>
+      <a class="nav-cta" href="/play.html">PLAY FREE <span>→</span></a>
+    </nav>
+
+    <header class="hero">
+      <canvas class="hero-bg"></canvas>
+      <div class="hero-fade"></div>
+      <div class="grain"></div>
+      <div class="hero-inner">
+        <div class="eyebrow reveal">Real-world terrain combat · Now in your browser</div>
+        <h1 class="hero-title reveal">
+          <span class="line">YOUR ZIP CODE.</span>
+          <span class="line accent">THEIR GRAVEYARD.</span>
+        </h1>
+        <p class="hero-sub reveal">
+          Type any US zip. We pull the real elevation, every street and every building from public data, an AI director turns it into a war zone, and goblins pour over the hills. You get two guns. They both go <b>BOPOOOOOOM</b>.
+        </p>
+        <form class="zip-launch reveal" autocomplete="off">
+          <div class="zip-field">
+            <span class="zip-pin"></span>
+            <input class="zip-input" inputmode="numeric" maxlength="5" placeholder="Enter a zip code" aria-label="Zip code" />
+            <span class="zip-place"></span>
+          </div>
+          <button class="btn-deploy" type="submit"><span>DEPLOY</span><i class="shine"></i></button>
+        </form>
+        <div class="hero-chips reveal">
+          <span>Try</span>
+          <button data-zip="90210">90210</button>
+          <button data-zip="81435">81435</button>
+          <button data-zip="10001">10001</button>
+          <button data-zip="86023">86023</button>
+          <button data-zip="33139">33139</button>
+        </div>
+      </div>
+      <div class="hero-shot-wrap">
+        <figure class="hero-shot">
+          <img src="/shots/telluride-goblin.jpg" alt="KRAWK gameplay in Telluride, Colorado" />
+          <figcaption><span class="live-dot"></span>TELLURIDE, CO 81435 · LIVE GAMEPLAY CAPTURE</figcaption>
+        </figure>
+      </div>
+      <div class="scroll-cue"><span></span>SCROLL</div>
+    </header>
+
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>BEVERLY HILLS 90210</span><i>✦</i><span>TELLURIDE 81435</span><i>✦</i><span>MANHATTAN 10001</span><i>✦</i><span>GRAND CANYON 86023</span><i>✦</i><span>MIAMI BEACH 33139</span><i>✦</i><span>SAN FRANCISCO 94133</span><i>✦</i><span>YOUR STREET ?????</span><i>✦</i>
+        <span>BEVERLY HILLS 90210</span><i>✦</i><span>TELLURIDE 81435</span><i>✦</i><span>MANHATTAN 10001</span><i>✦</i><span>GRAND CANYON 86023</span><i>✦</i><span>MIAMI BEACH 33139</span><i>✦</i><span>SAN FRANCISCO 94133</span><i>✦</i><span>YOUR STREET ?????</span><i>✦</i>
+      </div>
+    </section>
+
+    <section class="section world" id="world">
+      <div class="section-head reveal">
+        <div class="eyebrow">01 — The World</div>
+        <h2>Not a map <em>inspired</em> by your town.<br />Your actual town.</h2>
+        <p>Every battlefield is generated live from open data the second you hit deploy. The hill behind your house is the hill the goblins come over.</p>
+      </div>
+      <div class="stat-row reveal">
+        <div class="stat"><b data-count="366">0</b><span>real structures<br />in 90210</span></div>
+        <div class="stat"><b data-count="45.3" data-decimals="1">0</b><span>km of road<br />traced from OSM</span></div>
+        <div class="stat"><b data-count="131">0</b><span>meters of true<br />vertical relief</span></div>
+        <div class="stat"><b data-count="37249">0</b><span>elevation samples<br />per battlefield</span></div>
+      </div>
+      <div class="feature-grid">
+        <article class="feature reveal">
+          <div class="feature-icon">▲</div>
+          <h3>Satellite elevation</h3>
+          <p>AWS Terrarium digital elevation tiles decoded at ~5 m resolution. Canyons, ridgelines, the steep driveway you hate.</p>
+          <code>terrarium z15 · 193² samples</code>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-icon">▦</div>
+          <h3>Every building, every street</h3>
+          <p>OpenStreetMap footprints extruded to their tagged heights. Roads, rivers, parks, pools, parking lots and trees.</p>
+          <code>overpass · footprints · ways · landuse</code>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-icon">☁</div>
+          <h3>Live weather & sun</h3>
+          <p>Open-Meteo conditions right now. Raining in Seattle? It's raining in the fight. Dark in Miami? Bring the Magnum.</p>
+          <code>open-meteo · wmo codes · local sun</code>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-icon">✶</div>
+          <h3>AI battle director</h3>
+          <p>A language model reads the terrain and writes the war: biome, palette, fog, goblin spawn zones, wave count, codename and trash talk.</p>
+          <code>openai · json director · deterministic fallback</code>
+        </article>
+      </div>
+    </section>
+
+    <section class="pipeline">
+      <div class="pipeline-sticky">
+        <div class="pipeline-copy">
+          <div class="eyebrow">02 — Zip to warzone in ~20 seconds</div>
+          <ol class="pipeline-steps">
+            <li data-step="0"><b>Geocode</b><span>Zip to coordinates, local tangent plane, 1 km box.</span></li>
+            <li data-step="1"><b>Survey</b><span>Elevation tiles, OSM geometry and live weather, fetched in parallel.</span></li>
+            <li data-step="2"><b>Scatter</b><span>Trees, cars and cover dropped where they'd really be.</span></li>
+            <li data-step="3"><b>Direct</b><span>The AI director picks the mood and writes your briefing.</span></li>
+            <li data-step="4"><b>Archive</b><span>Gzipped into a consistent-hash sharded database. Second visit: instant.</span></li>
+          </ol>
+        </div>
+        <div class="pipeline-visual">
+          <figure class="device"><img src="/shots/loading.jpg" alt="Loading screen streaming the world build" /></figure>
+          <figure class="device device-2"><img src="/shots/briefing.jpg" alt="Mission briefing with tactical map of Beverly Hills" /></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section arsenal" id="arsenal">
+      <div class="section-head reveal">
+        <div class="eyebrow">03 — Arsenal</div>
+        <h2>Two guns. No upgrades.<br />No apologies.</h2>
+        <p>No loot boxes, no attachments, no battle pass. A double-stack .45 and a .44 Magnum revolver, modeled, animated and synthesized from scratch.</p>
+      </div>
+      <div class="gun-grid">
+        <article class="gun reveal" data-gun="m1911">
+          <div class="gun-tag">SIDEARM · SEMI-AUTO</div>
+          <h3>M1911 Double-Stack</h3>
+          <div class="gun-caliber">.45 ACP</div>
+          <dl class="gun-specs">
+            <div><dt>Capacity</dt><dd>14 + 1</dd></div>
+            <div><dt>Damage</dt><dd>58</dd></div>
+            <div><dt>Fire rate</dt><dd>630 rpm</dd></div>
+            <div><dt>Reserve</dt><dd>∞</dd></div>
+          </dl>
+          <div class="gun-bars">
+            <label>Power<i style="--v: 0.55"></i></label>
+            <label>Handling<i style="--v: 0.9"></i></label>
+            <label>Speed<i style="--v: 0.85"></i></label>
+          </div>
+          <button class="fire-btn" data-fire="m1911"><span class="fire-dot"></span>PULL THE TRIGGER</button>
+        </article>
+        <article class="gun gun-mag reveal" data-gun="anaconda">
+          <div class="gun-tag">HAND CANNON · DOUBLE-ACTION</div>
+          <h3>Colt Anaconda</h3>
+          <div class="gun-caliber">.44 MAGNUM</div>
+          <dl class="gun-specs">
+            <div><dt>Capacity</dt><dd>6</dd></div>
+            <div><dt>Damage</dt><dd>160</dd></div>
+            <div><dt>Penetration</dt><dd>4 goblins</dd></div>
+            <div><dt>Reload</dt><dd>Speedloader</dd></div>
+          </dl>
+          <div class="gun-bars">
+            <label>Power<i style="--v: 1"></i></label>
+            <label>Handling<i style="--v: 0.35"></i></label>
+            <label>Speed<i style="--v: 0.3"></i></label>
+          </div>
+          <button class="fire-btn" data-fire="anaconda"><span class="fire-dot"></span>PULL THE TRIGGER</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="boom" aria-label="BOPOOOOOOM">
+      <div class="boom-text" data-text="BOPOOOOOOM!!!">BOPOOOOOOM!!!</div>
+      <p class="boom-sub">Every shot is synthesized live: supersonic crack, chamber thump, a sub-bass drop you feel in your teeth and a tail that echoes off the real buildings around you. <button class="boom-btn" data-fire="anaconda">Turn your sound up and click.</button></p>
+    </section>
+
+    <section class="section bestiary" id="bestiary">
+      <div class="section-head reveal">
+        <div class="eyebrow">04 — Bestiary</div>
+        <h2>They took your zip code.<br />Take it back.</h2>
+        <p>Five breeds of goblin, each with their own AI. They flank, they swarm, they throw fireballs, and they will absolutely talk trash about your aim.</p>
+      </div>
+      <div class="lineup reveal">
+        <canvas class="lineup-canvas"></canvas>
+        <div class="lineup-cards">
+          <div class="foe" data-kind="runner"><b>Sneak</b><span>55 HP · Fast as hell</span><p>Comes in low and quick. Usually from behind.</p></div>
+          <div class="foe" data-kind="grunt"><b>Grunt</b><span>100 HP · The horde</span><p>Two .45s or one Magnum. There are always more.</p></div>
+          <div class="foe" data-kind="shaman"><b>Shaman</b><span>130 HP · Ranged</span><p>Lobs cursed fireballs from 26 m. Prioritize.</p></div>
+          <div class="foe" data-kind="brute"><b>Brute</b><span>440 HP · Tank</span><p>Hits for 28. The Anaconda was invented for this.</p></div>
+          <div class="foe foe-king" data-kind="king"><b>Krawk</b><span>3,600 HP · The Goblin King</span><p>Ground slams. Summons. Final wave. Good luck.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bootcamp" id="bootcamp">
+      <div class="bootcamp-grid">
+        <div class="section-head reveal">
+          <div class="eyebrow">05 — Boot Camp</div>
+          <h2>Sgt. Grimsby thinks<br />you're garbage.</h2>
+          <p>An eleven-step tutorial run by a fully voiced drill sergeant whose only goal is your emotional destruction. Every miss raises your Shame Rating. He grades you at the end. Nobody gets an A.</p>
+          <a class="btn-ghost inline" href="/play.html">ENLIST AND GET ROASTED</a>
+        </div>
+        <div class="sarge-card reveal">
+          <div class="sarge-head">
+            <div class="sarge-badge">SGT</div>
+            <div><b>SGT. GRIMSBY</b><span>DRILL INSTRUCTOR · LIVE TRANSMISSION</span></div>
+            <div class="shame"><small>SHAME</small><b class="shame-v">12%</b></div>
+          </div>
+          <p class="sarge-line">"Listen up, maggot. The goblins took your zip code, and the Pentagon sent… you."</p>
+          <div class="shame-bar"><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery">
+      <div class="section-head reveal">
+        <div class="eyebrow">06 — Field Footage</div>
+        <h2>Captured in-engine.<br />No trailers. No lies.</h2>
+      </div>
+      <div class="gallery-grid">
+        <figure class="shot shot-wide reveal"><img src="/shots/telluride-goblin.jpg" alt="Goblin charging in Telluride" loading="lazy" /><figcaption>Telluride, CO · Box canyon, real 280 m relief</figcaption></figure>
+        <figure class="shot reveal"><img src="/shots/menu.jpg" alt="Main menu with zip code entry" loading="lazy" /><figcaption>Deploy screen · Any US zip</figcaption></figure>
+        <figure class="shot reveal"><img src="/shots/briefing.jpg" alt="Briefing with tactical map" loading="lazy" /><figcaption>Briefing · Real OSM tactical map</figcaption></figure>
+        <figure class="shot shot-wide reveal"><img src="/shots/loading.jpg" alt="Live world build" loading="lazy" /><figcaption>World build · Streamed live from public data</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="section killboard" id="killboard">
+      <div class="killboard-grid">
+        <div class="section-head reveal">
+          <div class="eyebrow">07 — Global Killboard</div>
+          <h2>Ranked by zip.<br />Sharded for scale.</h2>
+          <p>Every run lands in a consistent-hash ring of database shards keyed by player and zip code. Global ranks are a scatter-gather across all of them, in milliseconds.</p>
+          <div class="shard-viz"><span></span><span></span><span></span><span></span></div>
+          <div class="shard-status">CONNECTING…</div>
+        </div>
+        <div class="board-card reveal">
+          <div class="board-head"><span>TOP OPERATORS · ALL ZIPS</span><span class="board-live"><i></i>LIVE</span></div>
+          <ol class="board"><li class="board-empty">Loading the wall of fame…</li></ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <canvas class="final-bg"></canvas>
+      <div class="final-inner reveal">
+        <h2>Type your zip.<br /><span class="accent">Defend your block.</span></h2>
+        <form class="zip-launch" autocomplete="off">
+          <div class="zip-field">
+            <span class="zip-pin"></span>
+            <input class="zip-input" inputmode="numeric" maxlength="5" placeholder="Enter a zip code" aria-label="Zip code" />
+            <span class="zip-place"></span>
+          </div>
+          <button class="btn-deploy" type="submit"><span>DEPLOY</span><i class="shine"></i></button>
+        </form>
+        <p class="final-note">Free. In your browser. No install. Mouse + keyboard recommended.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-brand"><img src="/favicon.svg" alt="" />KRAWK</div>
+      <p>Terrain: AWS Terrarium elevation tiles · Map data © OpenStreetMap contributors (ODbL) · Weather: Open-Meteo · Geocoding: Zippopotam.us</p>
+      <p class="footer-fine">No goblins were harmed in the making of this game. Several were obliterated.</p>
+    </footer>
+
+    <div class="lightbox" hidden><img alt="" /></div>
+    <script type="module" src="/src/landing/main.ts"></script>
+  </body>
+</html>
