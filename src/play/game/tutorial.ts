@@ -177,27 +177,34 @@ export class Tutorial {
     ];
   }
 
-  private spawnAhead(dist: number, angle: number, kind: "grunt" | "brute", dummy: boolean): Goblin {
-    const yaw = this.player.yaw + angle;
-    let x = this.player.pos.x - Math.sin(yaw) * dist;
-    let z = this.player.pos.z - Math.cos(yaw) * dist;
-    for (let k = 0; k < 20 && this.collision.buildingAt(x, z); k++) {
-      x += (Math.random() - 0.5) * 6;
-      z += (Math.random() - 0.5) * 6;
+  /** Nearest point roughly `dist` ahead that is outside buildings and in clear line of sight. */
+  private openSpot(dist: number, angle: number): [number, number] {
+    const eyeY = this.player.pos.y + 1.6;
+    for (const scale of [1, 0.8, 0.6, 0.45]) {
+      for (let k = 0; k <= 20; k++) {
+        const off = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 0.3;
+        const yaw = this.player.yaw + angle + off;
+        const d = dist * scale;
+        const x = this.player.pos.x - Math.sin(yaw) * d;
+        const z = this.player.pos.z - Math.cos(yaw) * d;
+        if (this.collision.buildingAt(x, z)) continue;
+        if (this.collision.lineBlocked(this.player.pos.x, eyeY, this.player.pos.z, x, this.collision.groundAt(x, z) + 1.2, z)) continue;
+        return [x, z];
+      }
     }
+    const yaw = this.player.yaw + angle;
+    return [this.player.pos.x - Math.sin(yaw) * dist * 0.4, this.player.pos.z - Math.cos(yaw) * dist * 0.4];
+  }
+
+  private spawnAhead(dist: number, angle: number, kind: "grunt" | "brute", dummy: boolean): Goblin {
+    const [x, z] = this.openSpot(dist, angle);
     const g = this.goblins.spawn(kind, x, z, { dummy });
     g.yaw = Math.atan2(-(this.player.pos.x - x), -(this.player.pos.z - z));
     return g;
   }
 
   private placeBeacon(dist: number) {
-    const yaw = this.player.yaw;
-    let x = this.player.pos.x - Math.sin(yaw) * dist;
-    let z = this.player.pos.z - Math.cos(yaw) * dist;
-    const pos = new THREE.Vector3(x, 0, z);
-    this.collision.resolve(pos, 1.5);
-    x = pos.x;
-    z = pos.z;
+    const [x, z] = this.openSpot(dist, 0);
     this.beaconPos.set(x, this.collision.groundAt(x, z), z);
     this.beacon.position.copy(this.beaconPos);
     this.beacon.visible = true;
@@ -208,9 +215,26 @@ export class Tutorial {
   }
 
   start() {
+    this.faceOpenGround();
     this.lastYaw = this.player.yaw;
     this.lastPitch = this.player.pitch;
     this.next();
+  }
+
+  private faceOpenGround() {
+    const { x, y, z } = this.player.pos;
+    let best = this.player.yaw, bestRun = -1;
+    for (let k = 0; k < 24; k++) {
+      const yaw = this.player.yaw + (k / 24) * Math.PI * 2;
+      let run = 0;
+      for (let d = 3; d <= 45; d += 3) {
+        const px = x - Math.sin(yaw) * d, pz = z - Math.cos(yaw) * d;
+        if (this.collision.buildingAt(px, pz) || this.collision.lineBlocked(x, y + 1.6, z, px, this.collision.groundAt(px, pz) + 1.2, pz)) break;
+        run = d;
+      }
+      if (run > bestRun) { bestRun = run; best = yaw; }
+    }
+    this.player.yaw = best;
   }
 
   private next() {
