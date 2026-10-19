@@ -6,8 +6,8 @@ const box = (w: number, h: number, d: number, r = 0.002) => new RoundedBoxGeomet
 export const MAT = {
   blued: new THREE.MeshStandardMaterial({ color: "#1d2024", metalness: 0.92, roughness: 0.32 }),
   bluedDark: new THREE.MeshStandardMaterial({ color: "#0e1012", metalness: 0.9, roughness: 0.45 }),
-  stainless: new THREE.MeshStandardMaterial({ color: "#c8ccd1", metalness: 1, roughness: 0.2 }),
-  stainlessDark: new THREE.MeshStandardMaterial({ color: "#8d9298", metalness: 1, roughness: 0.3 }),
+  stainless: new THREE.MeshStandardMaterial({ color: "#a7abb1", metalness: 1, roughness: 0.3 }),
+  stainlessDark: new THREE.MeshStandardMaterial({ color: "#767b81", metalness: 1, roughness: 0.38 }),
   wood: new THREE.MeshStandardMaterial({ color: "#6a3518", metalness: 0, roughness: 0.45 }),
   gold: new THREE.MeshStandardMaterial({ color: "#d4a73c", metalness: 1, roughness: 0.25 }),
   rubber: new THREE.MeshStandardMaterial({ color: "#141414", metalness: 0, roughness: 0.92 }),

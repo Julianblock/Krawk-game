@@ -125,7 +125,7 @@ export class WeaponSystem {
   swapsDone = 0;
 
   constructor(
-    viewScene: THREE.Scene,
+    private readonly viewScene: THREE.Scene,
     renderer: THREE.WebGLRenderer,
     private readonly viewCamera: THREE.PerspectiveCamera,
     private readonly worldCamera: THREE.PerspectiveCamera,
@@ -204,6 +204,7 @@ export class WeaponSystem {
   setLighting(sun: THREE.Color, intensity: number) {
     this.keyLight.color.copy(sun);
     this.keyLight.intensity = 1.2 + intensity * 0.5;
+    this.viewScene.environmentIntensity = 0.22 + intensity * 0.11;
   }
 
   addReserve(id: GunKind, n: number) {
