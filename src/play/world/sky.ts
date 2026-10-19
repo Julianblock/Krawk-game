@@ -20,9 +20,9 @@ export class SkySystem {
     this.sunDir.set(Math.cos(sunElev) * Math.cos(sunAz), Math.sin(sunElev), Math.cos(sunElev) * Math.sin(sunAz)).normalize();
     this.night = THREE.MathUtils.clamp(1 - (elev + 0.15) / 0.45, 0, 1);
 
-    const skyTop = new THREE.Color(pal.sky).lerp(new THREE.Color("#060a18"), this.night * 0.85);
-    const horizon = new THREE.Color(pal.horizon).lerp(new THREE.Color("#1a1530"), this.night * 0.7);
-    const fogColor = new THREE.Color(pal.fog).lerp(new THREE.Color("#0d1020"), this.night * 0.75);
+    const skyTop = new THREE.Color(pal.sky).lerp(new THREE.Color("#0c1530"), this.night * 0.8);
+    const horizon = new THREE.Color(pal.horizon).lerp(new THREE.Color("#2a2448"), this.night * 0.65);
+    const fogColor = new THREE.Color(pal.fog).lerp(new THREE.Color("#1c2238"), this.night * 0.6);
     const overcast = weather.cloudCover / 100;
 
     this.dome = new THREE.Mesh(
@@ -65,7 +65,8 @@ export class SkySystem {
             float c = smoothstep(0.55 - uCloud * 0.35, 0.95, fbm(cp));
             vec3 cloudCol = mix(vec3(1.0), uHorizon, 0.35) * (1.0 - uNight * 0.85);
             col = mix(col, cloudCol, c * smoothstep(0.0, 0.25, d.y) * 0.85);
-            float stars = step(0.9975, h(floor(d.xz / max(d.y, 0.1) * 300.0))) * uNight * smoothstep(0.1, 0.4, d.y) * (1.0 - c);
+            vec3 sc = floor(d * 260.0);
+            float stars = step(0.9985, h(sc.xy + sc.z * 17.31)) * uNight * smoothstep(0.05, 0.3, d.y) * (1.0 - c);
             col += vec3(stars);
             col = mix(col, uHorizon, smoothstep(0.08, -0.05, d.y));
             gl_FragColor = vec4(col, 1.0);
@@ -79,7 +80,7 @@ export class SkySystem {
     scene.fog = new THREE.FogExp2(fogColor, director.fogDensity * (1 + this.night * 0.5));
     scene.background = fogColor;
 
-    const sunIntensity = THREE.MathUtils.lerp(3.2, 0.35, this.night) * (1 - overcast * 0.45);
+    const sunIntensity = THREE.MathUtils.lerp(3.2, 1.25, this.night) * (1 - overcast * 0.4);
     this.sun = new THREE.DirectionalLight(
       this.night > 0.6 ? new THREE.Color("#9fb6ff") : new THREE.Color(pal.sun),
       sunIntensity,
@@ -95,7 +96,7 @@ export class SkySystem {
     this.sun.shadow.normalBias = 0.04;
     scene.add(this.sun, this.sun.target);
 
-    this.hemi = new THREE.HemisphereLight(skyTop.clone().lerp(new THREE.Color("#ffffff"), 0.35), new THREE.Color(pal.ground).multiplyScalar(0.6), THREE.MathUtils.lerp(1.15, 0.45, this.night));
+    this.hemi = new THREE.HemisphereLight(skyTop.clone().lerp(new THREE.Color("#ffffff"), 0.35), new THREE.Color(pal.ground).multiplyScalar(0.6), THREE.MathUtils.lerp(1.15, 0.9, this.night));
     scene.add(this.hemi);
 
     if (weather.code >= 51 && weather.code <= 82) this.addPrecip(scene, weather.code >= 71 && weather.code <= 77 ? "snow" : "rain");

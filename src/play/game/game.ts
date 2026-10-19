@@ -101,7 +101,8 @@ export class Game {
     this.collision = built.collisionWorld;
     this.scene.add(this.city.group);
     this.sky = new SkySystem(this.scene, world.director, world.weather);
-    this.city.windowMaterial.emissiveIntensity = this.sky.night * 1.6;
+    this.city.windowMaterial.emissiveIntensity = this.sky.night * 0.75;
+    gl.toneMappingExposure = 1 + this.sky.night * 0.45;
 
     this.fx = new Effects((x, z) => this.collision.groundAt(x, z));
     this.fx.onShellLand = () => this.audio.shellTink();
