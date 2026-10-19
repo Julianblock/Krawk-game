@@ -42,7 +42,7 @@
   padding: 26px 48px;
   z-index: 3;
 }
-.brand-mini { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-size: 22px; letter-spacing: 0.18em; }
+.brand-mini { color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 12px; font-family: var(--display); font-size: 22px; letter-spacing: 0.18em; }
 .brand-mini img { width: 30px; height: 30px; }
 .menu-status {
   display: flex;
@@ -254,7 +254,7 @@
 .board-list .nm { font-weight: 700; letter-spacing: 0.04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .board-list .nm small { display: block; font-weight: 500; font-size: 12px; color: var(--mute); }
 .board-list .sc { font-family: var(--mono); font-weight: 800; color: var(--acid); }
-.board-empty { color: var(--mute); font-size: 14px; padding: 8px 2px; }
+.board-list li.board-empty { display: block; color: var(--mute); font-size: 14px; padding: 10px 12px; }
 
 .menu-foot {
   position: absolute;
