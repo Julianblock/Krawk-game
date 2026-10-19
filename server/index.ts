@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import { WORLD_DATA_VERSION, WORLD_SIZES, type ScoreSubmission, type WorldProgress, type WorldSize } from "../shared/types.ts";
 import { ShardCluster } from "./db/cluster.ts";
 import { Repo } from "./db/repo.ts";
+import { geocodeZip } from "./geo/zip.ts";
 import { buildWorld } from "./world.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -20,6 +21,18 @@ app.use(express.json({ limit: "12mb" }));
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, shards: repo.stats(), ai: process.env.OPENAI_API_KEY ? "openai" : "heuristic" });
+});
+
+const zipCache = new Map<string, Awaited<ReturnType<typeof geocodeZip>>>();
+app.get("/api/zip/:zip", async (req, res) => {
+  const zip = req.params.zip;
+  try {
+    const place = zipCache.get(zip) ?? (await geocodeZip(zip));
+    zipCache.set(zip, place);
+    res.json(place);
+  } catch (err) {
+    res.status(404).json({ error: (err as Error).message });
+  }
 });
 
 app.get("/api/world/:zip/stream", async (req, res) => {
