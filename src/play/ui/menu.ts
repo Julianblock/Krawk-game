@@ -56,7 +56,7 @@ export class Menu {
       <div class="menu-scan"></div>
       <div class="grain"></div>
       <header class="menu-top">
-        <a class="brand-mini" href="/"><img src="/favicon.svg" alt="" />KRAWK</a>
+        <a class="brand-mini" href="./"><img src="favicon.svg" alt="" />KRAWK</a>
         <div class="menu-status"><span class="dot"></span><span class="status-text">CONNECTING TO COMMAND…</span></div>
       </header>
       <div class="menu-main">
@@ -237,9 +237,9 @@ export class Menu {
     const [health, board] = await Promise.all([fetchHealth(), fetchLeaderboard()]);
     const status = this.el.querySelector(".status-text")!;
     status.textContent = health
-      ? `${health.shards.length} DB SHARDS ONLINE · AI DIRECTOR: ${health.ai === "openai" ? "OPENAI" : "RULES ENGINE"}`
+      ? `${health.local ? "BROWSER MODE · LOCAL KILLBOARD" : `${health.shards.length} DB SHARDS ONLINE`} · AI DIRECTOR: ${health.ai === "openai" ? "OPENAI" : "RULES ENGINE"}`
       : "COMMAND OFFLINE · START THE API SERVER";
-    this.el.querySelector(".board-shards")!.textContent = health ? `${health.shards.length} SHARDS` : "";
+    this.el.querySelector(".board-shards")!.textContent = health ? (health.local ? "THIS DEVICE" : `${health.shards.length} SHARDS`) : "";
     const list = this.el.querySelector(".board-list")!;
     list.innerHTML = board.length
       ? board

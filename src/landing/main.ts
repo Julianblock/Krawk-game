@@ -121,7 +121,7 @@ for (const form of $$<HTMLFormElement>(".zip-launch")) {
       return;
     }
     sfx().uiDeploy();
-    setTimeout(() => (location.href = `/play.html?zip=${input.value}`), 220);
+    setTimeout(() => (location.href = `play.html?zip=${input.value}`), 220);
   });
 }
 for (const chip of $$<HTMLButtonElement>(".hero-chips button")) {
@@ -209,7 +209,7 @@ async function loadBoard() {
   const [health, board] = await Promise.all([fetchHealth(), fetchLeaderboard()]);
   const status = $(".shard-status");
   status.textContent = health
-    ? `${health.shards.length} SHARDS ONLINE · AI DIRECTOR: ${health.ai === "openai" ? "OPENAI" : "RULES ENGINE"}`
+    ? `${health.local ? "BROWSER MODE · SCORES SAVED ON THIS DEVICE" : `${health.shards.length} SHARDS ONLINE`} · AI DIRECTOR: ${health.ai === "openai" ? "OPENAI" : "RULES ENGINE"}`
     : "COMMAND OFFLINE";
   const list = $(".board");
   const rows = board.filter((e) => e.score > 0).slice(0, 8);
